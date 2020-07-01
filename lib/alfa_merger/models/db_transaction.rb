@@ -12,6 +12,8 @@ module AlfaMerger
         amount_outcome.zero?
       end
 
+
+
       # @return [Boolean]
       def completed?
         !account_number_income.nil? &&

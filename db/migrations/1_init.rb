@@ -1,13 +1,16 @@
 Sequel.migration do
   change do
     create_table(:transactions) do
+      # очень херовая модель - приходится в кодной строке по сути хранить две
+      # (надо бы создавать две записи, но это слишком много геммороя для быстрого парсера)
       primary_key :id
 
-      column :account_name, String, null: false
+      # column :account_name, String, null: false
       column :account_number_income, Integer, null: true
       column :account_number_outcome, Integer, null: true
 
-      column :currency_code, String, size: 3, null: false
+      column :currency_income, String, size: 3, null: true
+      column :currency_outcome, String, size: 3, null: true
       column :ref, String, size: 100, null: false
       column :description, String, text: true, null: false
       column :date, Date, null: false
@@ -20,7 +23,7 @@ Sequel.migration do
     end
 
     alter_table(:transactions) do
-      add_index :account_name
+
       add_index :account_number_income
       add_index :account_number_outcome
       add_index :ref, unique: true
