@@ -12,14 +12,12 @@ module AlfaMerger
         amount_outcome.zero?
       end
 
-
-
       # @return [Boolean]
       def completed?
         !account_number_income.nil? &&
-            !account_number_outcome.nil? &&
-            acount_income.nil? &&
-            acount_outcome.nil?
+          !account_number_outcome.nil? &&
+          !amount_income.nil? &&
+          !amount_outcome.nil?
       end
 
       def validate

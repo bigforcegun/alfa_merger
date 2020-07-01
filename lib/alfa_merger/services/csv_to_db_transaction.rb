@@ -12,8 +12,9 @@ module AlfaMerger
         set_right_account(db_record, csv_record)
         set_right_currency(db_record, csv_record)
 
-        db_record.date = DateTime.strptime(csv_record.date, "%d.%m.%y")
+        db_record.date = csv_record.date
         db_record.ref = csv_record.ref
+        db_record.sha_ref = csv_record.sha_ref
         db_record.description = csv_record.description
         db_record.amount_income = csv_record.amount_income
         db_record.amount_outcome = csv_record.amount_outcome

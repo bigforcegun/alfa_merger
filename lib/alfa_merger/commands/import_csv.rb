@@ -25,7 +25,7 @@ module AlfaMerger
           }
 
           output.puts "Starting parse file #{file}"
-          output.puts "==================================="
+          output.puts '==================================='
 
           csv_table = CSV.parse(File.read(file), col_sep: ';')
 
@@ -59,7 +59,7 @@ module AlfaMerger
       private
 
       def count_tokens(counts)
-        {updated: counts[:updated].to_s, created: counts[:created].to_s, skipped: counts[:skipped].to_s, errors: counts[:error].to_s}
+        { updated: counts[:updated].to_s, created: counts[:created].to_s, skipped: counts[:skipped].to_s, errors: counts[:error].to_s }
       end
 
       def update_counts_from_result(counts, result)
@@ -69,7 +69,7 @@ module AlfaMerger
       def results_table(results)
         table = TTY::Table.new header: %w[result message ref]
         results.select do |result|
-          next unless result.action == :error
+          next unless %i[error].include?(result.action)
 
           table << [
             result.action,

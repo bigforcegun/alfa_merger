@@ -5,7 +5,8 @@ module AlfaMerger
     class CsvRowFilter
       CREDIT_DESCS = [
         'Погашение ОД',
-        'Предоставление транша'
+        'Предоставление транша',
+        'Погашение процентов'
       ].freeze
 
       # @param [AlfaMerger::Models::CsvTransaction] csv_record

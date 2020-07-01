@@ -6,12 +6,15 @@ Sequel.migration do
       primary_key :id
 
       # column :account_name, String, null: false
-      column :account_number_income, Integer, null: true
-      column :account_number_outcome, Integer, null: true
+      #column :account_number_income, Integer, null: true
+      column :account_number_income, String, size: 30, null: true
+      #column :account_number_outcome, Integer, null: true
+      column :account_number_outcome, String, size: 30, null: true
 
       column :currency_income, String, size: 3, null: true
       column :currency_outcome, String, size: 3, null: true
-      column :ref, String, size: 100, null: false
+      column :ref, String, size: 100, null: true
+      column :sha_ref, String, size: 100, null: false
       column :description, String, text: true, null: false
       column :date, Date, null: false
 
@@ -26,7 +29,8 @@ Sequel.migration do
 
       add_index :account_number_income
       add_index :account_number_outcome
-      add_index :ref, unique: true
+      add_index :ref, unique: false
+      add_index :sha_ref, unique: true
       add_index :created_at
     end
   end

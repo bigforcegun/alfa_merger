@@ -27,7 +27,7 @@ require 'alfa_merger/models/csv_transaction'
 module AlfaMerger
   class Error < StandardError; end
 
-  class AccountDupError < Error; end
+  class TransactionDupError < Error; end
 
   class ImportDupError < Error; end
 

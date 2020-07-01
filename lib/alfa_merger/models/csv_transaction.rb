@@ -3,6 +3,9 @@
 module AlfaMerger
   module Models
     CsvTransaction = Struct.new(:account_name, :account_number, :currency, :date, :ref, :description, :amount_income, :amount_outcome) do
+      TRANSFER_DESC = 'Внутрибанковский перевод между счетами'
+
+      attr_accessor :sha_ref
 
       # @return [Boolean]
       def income?
@@ -14,10 +17,8 @@ module AlfaMerger
         amount_income.zero?
       end
 
-      # так проще, хоть и неверно
-      def normalize!
-
-        freeze
+      def transfer?
+        description.include?(TRANSFER_DESC)
       end
     end
   end
