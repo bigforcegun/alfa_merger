@@ -38,11 +38,16 @@ module AlfaMerger
           csv_table.shift
           csv_table.each do |csv_row|
             csv_record = Models::CsvTransaction.new(*csv_row[0..7])
-            csv_record.normalize!
-            result = Services::ImportCsvRecord.new.call(csv_record)
-            results << result
+            filter_result = Services::CsvRowFilter.new.call(csv_record)
+            if filter_result
+              import_result = filter_result
+            else
+              csv_record_clean = Services::CsvRowNormalize.new.call(csv_record)
+              import_result = Services::ImportCsvRecord.new.call(csv_record_clean)
+            end
+            results << import_result
             # ui update
-            update_counts_from_result(counts, result)
+            update_counts_from_result(counts, import_result)
             bar.advance(1, **count_tokens(counts))
           end
 
@@ -54,7 +59,7 @@ module AlfaMerger
       private
 
       def count_tokens(counts)
-        { updated: counts[:updated].to_s, created: counts[:created].to_s, skipped: counts[:skipped].to_s, errors: counts[:error].to_s }
+        {updated: counts[:updated].to_s, created: counts[:created].to_s, skipped: counts[:skipped].to_s, errors: counts[:error].to_s}
       end
 
       def update_counts_from_result(counts, result)

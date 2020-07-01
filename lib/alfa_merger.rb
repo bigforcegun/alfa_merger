@@ -16,6 +16,8 @@ require 'alfa_merger/data_base'
 require 'alfa_merger/csv_parser'
 require 'alfa_merger/utils'
 
+require 'alfa_merger/services/csv_row_filter'
+require 'alfa_merger/services/csv_row_normalize'
 require 'alfa_merger/services/import_csv_record'
 require 'alfa_merger/services/csv_to_db_transfer'
 require 'alfa_merger/services/csv_to_db_transaction'

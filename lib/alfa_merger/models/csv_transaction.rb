@@ -16,12 +16,7 @@ module AlfaMerger
 
       # так проще, хоть и неверно
       def normalize!
-        if ref.nil? || ref.empty?
-          self.ref = Digest::SHA256.hexdigest(ref.to_h.to_s)
-        end
-        self.account_number = account_number.to_i
-        self.amount_income = Utils.to_cents(amount_income)
-        self.amount_outcome = Utils.to_cents(amount_outcome)
+
         freeze
       end
     end
