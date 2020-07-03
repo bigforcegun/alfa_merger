@@ -1,17 +1,26 @@
 # frozen_string_literal: true
 
-require 'sequel'
-require 'runcom'
+
+# Почему гемы гадят так жестко?
+Warning[:deprecated] = false #FUUUU
+
 require 'pry'
 require 'csv'
+require 'logger'
+
+require 'sequel'
 require 'tty-color'
 require 'tty-table'
+require 'tty-file'
+require 'tty-config'
+require 'xdg'
 require 'tty-progressbar'
 require 'digest'
 require 'bigdecimal'
 require 'bigdecimal/util'
 
 require 'alfa_merger/version'
+require 'alfa_merger/config'
 require 'alfa_merger/data_base'
 require 'alfa_merger/csv_parser'
 require 'alfa_merger/utils'

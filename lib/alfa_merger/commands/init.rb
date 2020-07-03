@@ -12,12 +12,11 @@ module AlfaMerger
 
       def execute(input: $stdin, output: $stdout)
         DataBase.init
-        # Command logic goes here ...
-        #
-        #environment = XDG::Environment.new
-        #data = XDG::Data.new
-        #output.puts environment.data_home
-        #output.puts "OK"
+        DataBase.db.logger = Logger.new($stdout)
+        if @force
+          DataBase.make_backup
+          DataBase.clean_migrations
+        end
         DataBase.run_migrations
       end
     end
