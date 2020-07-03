@@ -35,11 +35,25 @@ module AlfaMerger
       @config.append_path "/etc/#{APP_ID}" # WHY NOT
       @config.append_path Dir.pwd
 
+      set_defailts!
+      save_if_not_exists!
+
       @db_config = DbConfig.new(config_dir, APP_ID.to_s)
+    end
+
+    def self.make_backup
+      if Pathname(config.source_file).exist?
+        TTY::File.copy_file config.source_file, backup_file
+      end
     end
 
     def config_dir
       @xdg_config.home + APP_ID
+    end
+
+    def self.backup_file
+      path = File.dirname(File.absolute_path(config.source_file))
+      "#{path}/#{config.filename}_#{DateTime.now}#{config.extname}"
     end
 
     def check_and_create_config_dir
@@ -54,6 +68,18 @@ module AlfaMerger
     def self.db_config
       @instance ||= new
       @instance.db_config
+    end
+
+    def set_defailts!
+      config.set_if_empty :filter_descriptions, value: [
+        'Погашение ОД',
+        'Предоставление транша',
+        'Погашение процентов'
+      ]
+    end
+
+    def save_if_not_exists!
+      @config.write unless Pathname.new(@config.source_file).exist?
     end
   end
 end

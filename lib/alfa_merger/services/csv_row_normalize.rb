@@ -3,10 +3,6 @@
 module AlfaMerger
   module Services
     class CsvRowNormalize
-      BAD_REFS = [
-        'CRD_'
-      ].freeze
-
       def call(csv_record)
         normalized_record = csv_record.dup
         set_sha_ref!(normalized_record)
@@ -17,12 +13,6 @@ module AlfaMerger
       end
 
       private
-
-      # у некоторых старых транзакций пустой реф - а они нам нужны
-      def fix_empty_ref!(csv_record)
-        set_sha_ref!(csv_record) if csv_record.ref.nil? || csv_record.ref.empty?
-        set_sha_ref!(csv_record) if BAD_REFS.include?(csv_record)
-      end
 
       # приводим типы - привет dry-struct
       def fix_types!(csv_record)

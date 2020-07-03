@@ -4,7 +4,7 @@ require_relative '../command'
 
 module AlfaMerger
   module Commands
-    class Init < AlfaMerger::Command
+    class InitDb < AlfaMerger::Command
       def initialize(force, options)
         @force = force
         @options = options
