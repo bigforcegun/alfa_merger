@@ -19,6 +19,7 @@ require 'alfa_merger/utils'
 require 'alfa_merger/services/csv_row_filter'
 require 'alfa_merger/services/csv_row_normalize'
 require 'alfa_merger/services/import_csv_record'
+require 'alfa_merger/services/import_csv_file'
 require 'alfa_merger/services/csv_to_db_transfer'
 require 'alfa_merger/services/csv_to_db_transaction'
 
@@ -33,5 +34,6 @@ module AlfaMerger
 
   class BadTransferRecordError < Error; end
 
-  ImportResult = Struct.new(:action, :message, :csv_record, :db_record, :error)
+  ImportRowResult = Struct.new(:action, :message, :csv_record, :db_record, :error)
+  ImportFileResult = Struct.new(:operation, :counts, :results)
 end

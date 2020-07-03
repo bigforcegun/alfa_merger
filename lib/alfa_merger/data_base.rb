@@ -27,9 +27,9 @@ module AlfaMerger
         Sequel::Migrator.run(db, "db/migrations")
       end
 
-      def fuck
-        require 'alfa_merger/models/csv_transaction'
+      def db_lazy_load_models
         require 'alfa_merger/models/db_transaction'
+        require 'alfa_merger/models/import_operation'
       end
 
       def check_migrations_and_exit

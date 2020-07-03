@@ -12,7 +12,9 @@ module AlfaMerger
       # @param [AlfaMerger::Models::CsvTransaction] csv_record
       # @return [Boolean]
       def call(csv_record)
-        return ImportResult.new(:skipped, 'Internal credit transaction', csv_record, nil) if check_credit_desk(csv_record)
+        if check_credit_desk(csv_record)
+          return ImportRowResult.new(:filtered, 'Internal credit transaction', csv_record, nil)
+        end
 
         false
       end

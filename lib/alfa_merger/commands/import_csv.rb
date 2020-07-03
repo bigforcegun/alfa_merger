@@ -13,57 +13,51 @@ module AlfaMerger
       def execute(input: $stdin, output: $stdout)
         DataBase.init
         DataBase.check
-        DataBase.fuck
+        DataBase.db_lazy_load_models
 
         @files.each do |file|
-          results = []
-          counts = {
-            created: 0,
-            skipped: 0,
-            error: 0,
-            updated: 0
-          }
-
           output.puts "Starting parse file #{file}"
           output.puts '==================================='
 
-          csv_table = CSV.parse(File.read(file), col_sep: ';')
-
           bar = TTY::ProgressBar.new(
-            'processing  [✔️:created |🔗:updated |❗:errors |❓:skipped] [:bar] :elapsed :percent',
-            output: output,
-            total: csv_table.count
+            'processing  [✔️:created |🔗:updated |❗:errors |❓:skipped|🛑:filtered] [:bar] :elapsed :percent',
+            output: output
           )
 
-          csv_table.shift
-          csv_table.each do |csv_row|
-            csv_record = Models::CsvTransaction.new(*csv_row[0..7])
-            filter_result = Services::CsvRowFilter.new.call(csv_record)
-            if filter_result
-              import_result = filter_result
-            else
-              csv_record_clean = Services::CsvRowNormalize.new.call(csv_record)
-              import_result = Services::ImportCsvRecord.new.call(csv_record_clean)
-            end
-            results << import_result
-            # ui update
-            update_counts_from_result(counts, import_result)
-            bar.advance(1, **count_tokens(counts))
-          end
+          import = Services::ImportCsvFile
+                     .new(
+                       file,
+                       before_import: before_import_proc(bar),
+                       after_row_import: after_row_import_proc(bar)
+                     )
+                     .call
 
           output.puts "\n\n\n"
-          output.puts results_table(results).render(:unicode)
+          output.puts "Import done with state: #{import.operation.state}"
+          if import.operation.error
+            output.puts "Import exception: #{import.operation.error}"
+          else
+            output.puts results_table(import.results).render(:unicode)
+          end
         end
       end
 
       private
 
-      def count_tokens(counts)
-        { updated: counts[:updated].to_s, created: counts[:created].to_s, skipped: counts[:skipped].to_s, errors: counts[:error].to_s }
+      def before_import_proc(bar)
+        lambda { |result|
+          bar.update(total: result.operation.rows_count)
+        }
       end
 
-      def update_counts_from_result(counts, result)
-        counts[result.action] += 1
+      def after_row_import_proc(bar)
+        lambda { |import_result|
+          bar.advance(1, **count_tokens(import_result.counts))
+        }
+      end
+
+      def count_tokens(counts)
+        Hash[counts.map { |k, v| [k, v.to_s] }]
       end
 
       def results_table(results)

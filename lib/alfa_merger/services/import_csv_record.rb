@@ -38,14 +38,14 @@ module AlfaMerger
         end
 
         db_record.save
-        ImportResult.new(action, message, csv_record, db_record)
+        ImportRowResult.new(action, message, csv_record, db_record)
       rescue TransactionDupError => e
         # binding.pry
-        ImportResult.new(:skipped, e.message, csv_record, nil, e)
+        ImportRowResult.new(:skipped, e.message, csv_record, nil, e)
       rescue ImportDupError => e
-        ImportResult.new(:skipped, e.message, csv_record, nil, e)
+        ImportRowResult.new(:skipped, e.message, csv_record, nil, e)
       rescue StandardError => e
-        ImportResult.new(:error, e.message, csv_record, nil, e)
+        ImportRowResult.new(:error, e.message, csv_record, nil, e)
       end
 
       private
